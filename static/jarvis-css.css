@@ -4,12 +4,9 @@
   100% {opacity: 0;}
 }
 
-.fade-in-fade-out {
-  animation: fade-inout 5s 1; 
-  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  color: white;
-  font-size: 6em;
-  text-align: center;
+.text p {
+  /*animation: fade-inout 5s 1; */
+  display: none;
   
 }
 
@@ -19,6 +16,9 @@
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  color: white;
+  text-align: center;
 }
 
 .background {
