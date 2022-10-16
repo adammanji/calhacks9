@@ -159,6 +159,17 @@ def nlp() :
             
             info['variables'] = get_plot_variables(phrase)
 
+
+    elif command == 'Clear' :
+
+        if 'plot' in phrase.split(" ") :
+
+            info['which'] = 'plot'
+        
+        else :
+
+            info['which'] = 'all'
+
     return {'command': command, 'info': info}
 
 

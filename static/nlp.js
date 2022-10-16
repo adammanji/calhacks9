@@ -43,7 +43,7 @@ function process_nlp(phrase) {
             Create - ['model': 'pendulum']
             Increase, Decrease, Set - ['variable': 'height', 'amount': 0.0]
             Plot - ['variables': ['velocity', 'time']]
-            Clear - []
+            Clear - ['which': 'plot'] -- options: ['plot', 'all']
 
             IF MODEL IS OSCILLATOR, Increase and Decrease return errors
                 Set returns ['which': 'ground state'] (one of the key phrases)
