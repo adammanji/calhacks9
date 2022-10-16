@@ -224,7 +224,7 @@ function pendulum_updateChart() {
             x_pt = pendulum.mass;
             break;
         case 'length':
-            x_pt = line_length;
+            x_pt = p_line_length;
             break;
         case 'height':
             x_pt = (H - pendulum.position.y) - H/2;
