@@ -1,35 +1,26 @@
 {% extends "layout.html" %}
 
-
 {% block title %}
 
-Page
+Jarvis
 
 {% endblock %}
 
 
 {% block head %}
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/jarvis-css.css">
+</head>
 
 {% endblock %}
 
 
 
 {% block body %}
-
-    <br><br>
-
-    <h2>Voice to Text</h2>
-
-    <br>
-
-    <button id="speechButton">Start</button>
-
-    <br><br><br>
-
-    Result:
-
-    <br><br>
-
-    <div id="textHere"></div>
-
+<body class="background">
+    <div class="text">
+        <div class="fade-in-fade-out">Hello</div>
+    </div>
+</body>
 {% endblock %}
