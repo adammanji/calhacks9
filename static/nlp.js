@@ -5,12 +5,15 @@ function process_nlp(phrase) {
         passed_info = data['info']
         command = data['command']
 
-        display_string = "Your command was " + command + "<br><br>";
-        for ([key, value] of Object.entries(passed_info)) {
-           display_string += key + ": " + value + "<br>"
-        }
+        // passed_info has certain variables based on command
 
-        $('#textHere').html(display_string);
+            // Create - ['model': 'pendulum']
+            // Increase, Decrease, Set - ['variable': 'height', 'amount': 0.0]
+            // Plot - ['variables': ['velocity', 'time']]
+
+            // variables = ['mass', 'length', 'height', 'gravity', 'angle', 'angular velocity']
+            // plot_variables = variables.copy() + ['potential', 'kinetic', 'over time']
+            // models = ['block on a ramp', 'pendulum', 'quantum harmonic oscillator', 'mobius strip']
 
         // get back commands to interpret, run those commands w troy's code
 
