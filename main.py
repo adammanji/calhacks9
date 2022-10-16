@@ -100,9 +100,6 @@ def nlp() :
     command = get_most_confident(co.classify(model=command_type_model, inputs=[phrase])).strip()
     info = {}
 
-    print(command)
-    print("&&&&")
-
 
     # CREATE
 
