@@ -12,7 +12,7 @@ function process_nlp(phrase) {
             // Plot - ['variables': ['velocity', 'time']]
 
             // variables = ['mass', 'length', 'height', 'gravity', 'angle', 'angular velocity']
-            // plot_variables = variables.copy() + ['potential', 'kinetic', 'over time']
+            // plot_variables = variables.copy() + ['potential', 'kinetic', 'time']
             // models = ['block on a ramp', 'pendulum', 'quantum harmonic oscillator', 'mobius strip']
 
         // get back commands to interpret, run those commands w troy's code
