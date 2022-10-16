@@ -44,9 +44,32 @@ function process_nlp(phrases) {
             passed_info = data['info'];
             command = data['command'];
 
-            /*
-            
-            passed_info has certain variables based on command
+        switch (command) {
+            case "Create":
+                create(passed_info['model']);
+                break;
+            case "Increase":
+                increase(passed_info['variable'], passed_info['amount']);
+                break;
+            case "Decrease":
+                decrease(passed_info['variable'], passed_info['amount']);
+                break;
+            case "Set":
+                set(passed_info['variable'], passed_info['amount']);
+                break;
+            case "Plot":
+                plot(passed_info['variables']);
+                break;
+            case "Clear":
+                clear(passed_info['which']);
+                break;
+        }
+
+        console.log(passed_info, command);
+
+        /*
+        
+        passed_info has certain variables based on command
 
                 Create - ['model': 'pendulum']
                 Increase, Decrease, Set - ['variable': 'height', 'amount': 0.0]

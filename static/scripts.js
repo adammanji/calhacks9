@@ -30,6 +30,7 @@ function keyUp(k) {
 }
 
 $(document).ready(function() {
+    $("#container").fadeOut(50);
     $(document).keydown(function(e) {
         keyDown(e.keyCode);
     });
