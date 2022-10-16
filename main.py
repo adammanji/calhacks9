@@ -228,6 +228,9 @@ def get_plot_variables(phrase, oscillator=False) :
         if sim > max_sim :
             max_sim = sim
             output1 = v
+        elif sim == max_sim :
+            if phrase.find(v) < phrase.find(output1) :
+                output1 = v
 
     vars.remove(output1)
 
@@ -238,6 +241,9 @@ def get_plot_variables(phrase, oscillator=False) :
         if sim > max_sim :
             max_sim = sim
             output2 = v
+        elif sim == max_sim :
+            if phrase.find(v) < phrase.find(output2) :
+                output2 = v
     if max_sim < 0.1 :
         output2 = 'time'
 
