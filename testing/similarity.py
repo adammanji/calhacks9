@@ -53,7 +53,7 @@ def get_plot_variables(phrase) :
 def main() :
 
     phrases = [
-        ("give me a plot of the angle versus the kinetic energy", "angle", "kinetic")
+        ("plot potential vs kinetic energy", "potential", "kinetic")
     ]
 
     total_cases = len(phrases)
