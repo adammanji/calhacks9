@@ -19,9 +19,31 @@ var engine = Engine.create(),
 var render;
 var runner;
 
-function clear() {
+function clear(which) {
     // Fades out the html of container and clears #simulation, #chart-container1, and #chart-container2
-    pendulum_created = false;
+    if (which == 'plot') {
+        $("#container").fadeOut(500, function() {
+            togglePlot();
+            $("#container").fadeIn(500);
+        });
+        return;
+    }
+    $("#container").fadeOut(1000, function() {
+        $("#simulation").html("");
+        $("#chart-container1").html("");
+        $("#chart-container1").html("<canvas id='chart1'></canvas>");
+        $("#container").fadeIn(250);
+        line_length = 250;
+        mass = 1;
+        angle = 1;
+        angular_velocity = 0;
+        World.clear(world);
+        pendulum_created = false;
+        Render.lookAt(render, {
+            min: { x: 0, y: 0 },
+            max: { x: W, y: H }
+        });
+    })
 }
 
 
@@ -82,7 +104,7 @@ function pendulum_create() {
     runner = Runner.create();
     Runner.run(runner, engine);
 
-    pendulum = Bodies.circle(pendulum_x(angle), pendulum_y(angle), pendulum_scale(mass)*25, {mass: mass, frictionAir: -0.0021, render: {fillStyle: "#fff"}});
+    pendulum = Bodies.circle(pendulum_x(angle), pendulum_y(angle), pendulum_scale(mass)*25, {mass: mass, frictionAir: -0.0015, render: {fillStyle: "#fff"}});
     rod = Constraint.create({
         pointA: { x: W / 2, y: H / 2 },
         bodyB: pendulum,
@@ -97,6 +119,7 @@ function pendulum_create() {
         min: { x: 0, y: 0 },
         max: { x: W, y: H }
     });
+    $("#container").fadeIn(1000);
 }
 
 function adjust(base, type, amount) {
@@ -185,7 +208,7 @@ function updateChart() {
             x_pt = Math.atan2(horz, vert);
             break;
         case 'angular velocity':
-            x_pt = pendulum.line_length*pendulum.speed;
+            x_pt = line_length*pendulum.speed;
             break;
         case 'potential':
             x_pt = pendulum.mass*9.8*((H - pendulum.position.y) - H/2);
@@ -224,7 +247,7 @@ function updateChart() {
             y_pt = r2d(Math.atan2(horz, vert));
             break;
         case 'angular velocity':
-            y_pt = pendulum.line_length*pendulum.speed;
+            y_pt = line_length*pendulum.speed;
             break;
         case 'potential':
             y_pt = pendulum.mass*9.8*((H - pendulum.position.y) - H/2);
@@ -251,54 +274,69 @@ function updateChart() {
 plotsOpen = false
 
 function pendulum_plot(x_var, y_var) {
-    var ctx1 = document.getElementById("chart1").getContext("2d");
-    chart_x_var = x_var;
-    chart_y_var = y_var;
-    myChart1 = new Chart(ctx1, {
-        type: "scatter",
-        data: {
-            labels: [],
-            datasets: [
-                {
-                    label: y_var + " vs. " + x_var,
-                    data: [],
-                    borderColor: ["rgba(255, 99, 132, 1)"],
-                    borderWidth: 1,
-                    pointRadius: 4,
-                    showLine: true,
-                    fill: false
+    $("#container").fadeOut(500, function() {
+        var ctx1 = document.getElementById("chart1").getContext("2d");
+        chart_x_var = x_var;
+        chart_y_var = y_var;
+        if (plotsOpen == true) {
+            myChart1.data.datasets[0].label = y_var + " vs. " + x_var;
+            myChart1.data.datasets[0].data = [];
+        } else {
+            myChart1 = new Chart(ctx1, {
+                type: "scatter",
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: y_var + " vs. " + x_var,
+                            data: [],
+                            borderColor: ["rgba(255, 255, 255, 1)"],
+                            borderWidth: 5,
+                            pointRadius: 5,
+                            pointBackgroundColor: ["rgba(255, 255, 255, 1)"],
+                            pointBorderColor: ["rgba(255, 255, 255, 1)"],
+                            showLine: true,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        xAxes: [
+                            {
+                                ticks: {
+                                    display: false
+                                }
+                            }
+                        ],
+                        yAxes: [
+                            {
+                                ticks: {
+                                    display: false
+                                }
+                            }
+                        ]
+                    }
                 }
-            ]
-        },
-        options: {
-            scales: {
-                xAxes: [
-                    {
-                        ticks: {
-                            display: false
-                        }
-                    }
-                ],
-                yAxes: [
-                    {
-                        ticks: {
-                            display: false
-                        }
-                    }
-                ]
-            }
+            });
+            togglePlot();
+            $("#container").fadeIn(500);
         }
+
+        start = new Date();
+        setInterval(updateChart, 1000/30);
     });
+}
 
-    start = new Date();
-    setInterval(updateChart, 1000/30);
-
+function togglePlot() {
     if (plotsOpen) {
         Render.lookAt(render, {
             min: { x: 0, y: 0 },
             max: { x: W, y: H }
         });
         $("#chart-container1").css("opacity", 0)
+        $("#chart-container1").html("");
+        $("#chart-container1").html("<canvas id='chart1'></canvas>");
     } else {
         Render.lookAt(render, {
             min: { x: 2.5*W/10, y: 0 },
