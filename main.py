@@ -1,6 +1,7 @@
 import functools
 import json
 from lib2to3.pgen2.literals import simple_escapes
+from msilib.schema import Error
 import os
 import re
 
@@ -34,7 +35,8 @@ import time
 import cohere
 
 co = cohere.Client('eDxAAFeRgmyqM2FkPzHYxa7aPnBZYD8MLIqda803')
-command_type_model = "2111452f-f3a2-4b6b-b680-db2366a7714f-ft"
+# command_type_model = "2111452f-f3a2-4b6b-b680-db2366a7714f-ft" [old]
+command_type_model = "2560b143-5a32-4ce0-959e-a347815866b2-ft"
 
 app = Flask(__name__)
 
@@ -95,25 +97,78 @@ def index() :
 def nlp() :
 
     phrase = request.form['phrase']
+    cur_model = request.form['model']
 
     command = get_most_confident(co.classify(model=command_type_model, inputs=[phrase])).strip()
     info = {}
+
+
+    # CREATE
 
     if command == 'Create' :
 
         info['model'] = most_similar_model(phrase)
 
+
+    # INCREASE, DECREASE, and SET [variable modifiers]    
+
     elif command in ['Increase', 'Decrease', 'Set'] :
 
+        # oscillator
+
+        if cur_model == 'oscillator' :
+
+            if command in ['Increase', 'Decrease'] :
+
+                return {'error': 'command not valid on oscillator'}
+
+            # set
+
+            try :
+
+                info['which'] = get_oscillator_set_command(phrase)
+
+            except :
+
+                return {'error': 'no match for oscillator set'}
+
+            return {'command': 'Set', 'info': info}
+
+
+        # not oscillator
+
         info['variable'] = get_variable(phrase)
-        info['amount'] = get_amount(phrase)
+        try :
+            info['amount'] = get_amount(phrase)
+        except :
+            return {'error': 'no number'}
 
         if command == 'Decrease' and info['amount'] > 0 :
             info['amount'] = -1 * info['amount']
     
+
+    # PLOT
+
     elif command == 'Plot' :
 
-        info['variables'] = get_plot_variables(phrase)
+        if cur_model == 'oscillator' :
+
+            info['variables'] = get_plot_variables(phrase, oscillator=True)
+
+        else :
+            
+            info['variables'] = get_plot_variables(phrase)
+
+
+    elif command == 'Clear' :
+
+        if 'plot' in phrase.split(" ") :
+
+            info['which'] = 'plot'
+        
+        else :
+
+            info['which'] = 'all'
 
     return {'command': command, 'info': info}
 
@@ -122,12 +177,30 @@ def nlp() :
 variables = ['mass', 'length', 'height', 'gravity', 'angle', 'angular velocity']
 plot_variables = variables.copy() + ['potential', 'kinetic', 'over time']
 models = ['block on a ramp', 'pendulum', 'quantum harmonic oscillator', 'mobius strip']
-
+oscillator_key_phrases = ['give me the ground state', 'add some second stationary state', 'add a bit of first excited state', 'give me a random linear combination of stationary states', 'coherent state']
+oscillator_plot_variables = plot_variables.copy() + ['position', 'momentum', 'heisenberg uncertainty']
 
 
 def similarity(a, b) :
 
+    if a in b :
+        return 1.0
+
     return SequenceMatcher(None, a, b).ratio()
+
+
+def get_oscillator_set_command(phrase) :
+
+    max_sim = 0.0
+    output = ""
+    for p in oscillator_key_phrases :
+        sim = similarity(p, phrase)
+        if sim > max_sim :
+            max_sim = sim
+            output = p
+    if max_sim < 0.1 :
+        return 1/0
+    return output
 
 
 def get_variable(phrase) :
@@ -142,21 +215,27 @@ def get_variable(phrase) :
     return output
 
 
-def get_plot_variables(phrase) :
+def get_plot_variables(phrase, oscillator=False) :
+
+    vars = plot_variables
+
+    if oscillator :
+
+        vars = oscillator_plot_variables
 
     max_sim = 0.0
     output1 = ""
-    for v in plot_variables :
+    for v in vars :
         sim = similarity(v, phrase)
         if sim > max_sim :
             max_sim = sim
             output1 = v
 
-    plot_variables.remove(output1)
+    vars.remove(output1)
 
     max_sim = 0.0
     output2 = ""
-    for v in plot_variables :
+    for v in vars :
         sim = similarity(v, phrase)
         if sim > max_sim :
             max_sim = sim
@@ -164,7 +243,7 @@ def get_plot_variables(phrase) :
     if max_sim < 0.1 :
         output2 = 'time'
 
-    plot_variables.append(output1)
+    vars.append(output1)
 
     if output1 == 'over time' :
         output1 = 'time'
