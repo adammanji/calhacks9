@@ -25,7 +25,7 @@ Steve
     position: absolute;
     top: 10px;
     left: 20px;"> 
-    <div class="container">
+    <div id="container">
         <div id="simulation"></div>
         <div id="chart-container1">
             <canvas id="chart1"></canvas>
@@ -34,16 +34,18 @@ Steve
             <canvas id="chart2"></canvas>
         </div>
     </div>
-    <div class="text">
-        <p style="font-size: 6em">Hello</p>
-        <p style="font-size: 4em;"> My name is STEVE.</p>
-    </div>
-    <div class="inputpage">
-        <div class="inputtext">
-            <p style="font-size: 4em;">What can I show you?</p>
-        </div> 
-        <a href="javascript:setImageVisible('/static/Jarvis_fast_gif.gif', false)"><img src="/static/Jarvis_fast_gif.gif" alt=TALKING style = "height:300px; width: auto; 
-            position: absolute; top: 50px; left: 80px"></a>
+    <div id="alltext">
+        <div class="text">
+            <p style="font-size: 6em">Hello</p>
+            <p style="font-size: 4em;"> My name is STEVE.</p>
+        </div>
+        <div class="inputpage">
+            <div class="inputtext">
+                <p style="font-size: 4em;">What can I show you?</p>
+            </div> 
+            <img src="/static/Jarvis_fast_gif.gif" alt=TALKING style = "height:300px; width: auto; 
+                position: absolute; top: 50px; left: 80px", id='waveform'>
+        </div>
     </div>
 
 
@@ -52,12 +54,9 @@ Steve
     <script src="/static/jquery-3.6.1.min.js"></script>
     <script src="/static/nlp.js"></script>
     <script src="/static/scripts.js"></script>
-    <script type="module">
-        import * as THREE from "https://cdn.skypack.dev/three@0.136.0";
-        import {OrbitControls} from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls";
-        import {ParametricGeometry} from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/geometries/ParametricGeometry";
-        import {ParametricGeometries} from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/geometries/ParametricGeometries";
-    </script>
+    <!-- <script type="module">
+        
+    </script> -->
     <script src="/static/simulation.js"></script>
     <script src="/static/fading-transition.js"></script>
 </body>

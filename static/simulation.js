@@ -23,6 +23,9 @@ var plotsOpen = false;
 
 function clear(which) {
     // Fades out the html of container and clears #simulation, #chart-container1, and #chart-container2
+    if (model_active == false) {
+        return;
+    }
     if (which == 'plot') {
         $("#container").fadeOut(500, function() {
             togglePlot();
@@ -40,15 +43,16 @@ function clear(which) {
         mass = 1;
         angle = 1;
         angular_velocity = 0;
-        World.clear(world);
         model_active = false;
-        Render.lookAt(render, {
-            min: { x: 0, y: 0 },
-            max: { x: W, y: H }
-        });
+        if (render != undefined) {
+            World.clear(world);
+            Render.lookAt(render, {
+                min: { x: 0, y: 0 },
+                max: { x: W, y: H }
+            });
+        }
         coeffs = [1];
         q_data = undefined;
-        
     })
 }
 
@@ -302,53 +306,51 @@ function pendulum_plot(x_var, y_var) {
         var ctx1 = document.getElementById("chart1").getContext("2d");
         chart_x_var = x_var;
         chart_y_var = y_var;
-        if (plotsOpen == true) {
-            myChart1.data.datasets[0].label = y_var + " vs. " + x_var;
-            myChart1.data.datasets[0].data = [];
-        } else {
-            myChart1 = new Chart(ctx1, {
-                type: "scatter",
-                data: {
-                    labels: [],
-                    datasets: [
+        if (!plotsOpen) {
+            togglePlot();
+        }
+        myChart1 = new Chart(ctx1, {
+            type: "scatter",
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: y_var + " vs. " + x_var,
+                        data: [],
+                        borderColor: ["rgba(255, 255, 255, 1)"],
+                        borderWidth: 5,
+                        pointRadius: 5,
+                        pointBackgroundColor: ["rgba(255, 255, 255, 1)"],
+                        pointBorderColor: ["rgba(255, 255, 255, 1)"],
+                        showLine: true,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    xAxes: [
                         {
-                            label: y_var + " vs. " + x_var,
-                            data: [],
-                            borderColor: ["rgba(255, 255, 255, 1)"],
-                            borderWidth: 5,
-                            pointRadius: 5,
-                            pointBackgroundColor: ["rgba(255, 255, 255, 1)"],
-                            pointBorderColor: ["rgba(255, 255, 255, 1)"],
-                            showLine: true,
-                            fill: false
+                            ticks: {
+                                display: false
+                            }
+                        }
+                    ],
+                    yAxes: [
+                        {
+                            ticks: {
+                                display: false
+                            }
                         }
                     ]
-                },
-                options: {
-                    scales: {
-                        xAxes: [
-                            {
-                                ticks: {
-                                    display: false
-                                }
-                            }
-                        ],
-                        yAxes: [
-                            {
-                                ticks: {
-                                    display: false
-                                }
-                            }
-                        ]
-                    }
                 }
-            });
-            togglePlot();
-            $("#container").fadeIn(500);
-        }
+            }
+        });
 
         start = new Date();
         setInterval(pendulum_updateChart, 1000/30);
+
+        $("#container").fadeIn(500);
     });
 }
 
@@ -562,4 +564,31 @@ function quantum(phrase) {
             break;
     }
     start = new Date();
+}
+
+
+/// Mobius strip
+
+
+function mobius_create() {
+    let scene = new THREE.Scene();
+    let camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 1, 1000);
+    camera.position.setScalar(10);
+    let renderer = new THREE.WebGLRenderer();
+    renderer.setSize(innerWidth, innerHeight);
+    document.getElementById("simulation").appendChild(renderer.domElement);
+    
+    let controls = new OrbitControls(camera, renderer.domElement);
+    
+    const geometry = new ParametricGeometry( ParametricGeometries.mobius3d, 25, 25 );
+    const material = new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load("https://threejs.org/examples/textures/uv_grid_opengl.jpg") } );
+    const mobius = new THREE.Mesh( geometry, material );
+    mobius.scale.multiplyScalar(2);
+    scene.add( mobius );
+    
+    renderer.setAnimationLoop(() => {
+        renderer.render(scene, camera);
+        mobius.rotation.x += 0.01
+        // mobius.rotation.y += 0.01
+    });
 }

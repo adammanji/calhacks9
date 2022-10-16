@@ -41,6 +41,8 @@ function process_nlp(phrases) {
         passed_info = data['info'];
         command = data['command'];
 
+        console.log(passed_info, command);
+
         switch (command) {
             case "Create":
                 create(passed_info['model']);
@@ -59,7 +61,11 @@ function process_nlp(phrases) {
                 }
                 break;
             case "Plot":
-                plot(passed_info['variables']);
+                if (current_model == 'oscillator') {
+                    quantum('give me a random linear combination of stationary states');
+                } else {
+                    plot(passed_info['variables']);
+                }
                 break;
             case "Clear":
                 clear(passed_info['which']);
@@ -67,8 +73,6 @@ function process_nlp(phrases) {
             default:
                 break;
         }
-
-        console.log(passed_info, command);
 
         /*
         
@@ -134,6 +138,7 @@ function create(model) {
             quantum_create();
             break;
         case 'mobius strip':
+            mobius_create();
             break;
     }
 }

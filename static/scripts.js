@@ -15,6 +15,7 @@ speech_recognition_started = false;
 function keyDown(k) {
     if (k == 32) {
         if (!speech_recognition_started) {
+            setVisibleWithFade("#waveform", true, null);
             sr.start();
             speech_recognition_started = true;
         }
@@ -23,6 +24,7 @@ function keyDown(k) {
 }
 function keyUp(k) {
     if (k == 32) {
+        setVisibleWithFade("#waveform", false, null);
         sr.stop();
         speech_recognition_started = false;
         // $('#textHere').html("Say something...");
@@ -47,8 +49,9 @@ $(document).ready(function() {
 sr.onresult = function(event) {
     speech = event.results[0][0].transcript;
     // $('#textHere').html(speech);
-    process_nlp(speech.split("and"));
-
+    process_nlp(speech.split(" and "));
+    setVisibleWithFade("#alltext", false, null);
+    setVisibleWithFade("#waveform", false, null);
 }
 
 
@@ -86,4 +89,15 @@ function tts(speech) {
     msg.text = speech;
     window.speechSynthesis.speak(msg);
 
+}
+
+
+/// show image
+
+function setVisibleWithFade(selector, visible, completion) {
+    if (visible) {
+        $(selector).fadeIn(200, completion);
+    } else {
+        $(selector).fadeOut(200, completion);
+    }
 }
