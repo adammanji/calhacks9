@@ -1,7 +1,5 @@
 import functools
 import json
-from lib2to3.pgen2.literals import simple_escapes
-from msilib.schema import Error
 import os
 import re
 
