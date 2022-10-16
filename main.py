@@ -34,7 +34,8 @@ import cohere
 
 co = cohere.Client('eDxAAFeRgmyqM2FkPzHYxa7aPnBZYD8MLIqda803')
 # command_type_model = "2111452f-f3a2-4b6b-b680-db2366a7714f-ft" [old]
-command_type_model = "2560b143-5a32-4ce0-959e-a347815866b2-ft"
+# command_type_model = "2560b143-5a32-4ce0-959e-a347815866b2-ft" [old ish]
+command_type_model = "b24a025e-70ed-4c4a-9bd0-bd185ea4625a-ft"
 
 app = Flask(__name__)
 
@@ -100,9 +101,6 @@ def nlp() :
     command = get_most_confident(co.classify(model=command_type_model, inputs=[phrase])).strip()
     info = {}
 
-    print(command)
-    print("&&&&")
-
 
     # CREATE
 
@@ -118,10 +116,6 @@ def nlp() :
         # oscillator
 
         if cur_model == 'oscillator' :
-
-            if command in ['Increase', 'Decrease'] :
-
-                return {'error': 'command not valid on oscillator'}
 
             # set
 
@@ -175,7 +169,7 @@ def nlp() :
 
 
 
-variables = ['mass', 'length', 'height', 'gravity', 'angle', 'angular velocity']
+variables = ['mass', 'length', 'height', 'gravity', 'angle', 'angular velocity', 'friction']
 plot_variables = variables.copy() + ['potential', 'kinetic', 'over time']
 models = ['block on a ramp', 'pendulum', 'quantum harmonic oscillator', 'mobius strip']
 oscillator_key_phrases = ['give me the ground state', 'add some second stationary state', 'add a bit of first excited state', 'give me a random linear combination of stationary states', 'coherent state']

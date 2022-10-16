@@ -8,10 +8,7 @@ function process_nlp(phrases) {
 
         var phrase = phrases[i];
 
-        currentModel = ""
-        // comment this out when we have an actual way to track this
-
-        $.post('/nlp', {'phrase': phrase, 'model': currentModel}, function(data, status, jqXHR) {
+        $.post('/nlp', {'phrase': phrase, 'model': current_model}, function(data, status, jqXHR) {
 
         /*  POSSIBLE ERRORS
 
@@ -21,28 +18,28 @@ function process_nlp(phrases) {
 
         */
 
-            if (data['error']) {
+        if (data['error']) {
 
-                e = data['error'];
-                
-                if (e == 'no number') {
-                    alert("no number given!");
-                }
-
-                else if (e == 'command not valid on oscillator') {
-                    alert(e);
-                }
-
-                else if (e == 'no match for oscillator set') {
-                    alert(e);
-                }
-
-                return;
-
+            e = data['error'];
+            
+            if (e == 'no number') {
+                alert("no number given!");
             }
 
-            passed_info = data['info'];
-            command = data['command'];
+            else if (e == 'command not valid on oscillator') {
+                alert(e);
+            }
+
+            else if (e == 'no match for oscillator set') {
+                alert(e);
+            }
+
+            return;
+
+        }
+
+        passed_info = data['info'];
+        command = data['command'];
 
         switch (command) {
             case "Create":
@@ -55,13 +52,19 @@ function process_nlp(phrases) {
                 decrease(passed_info['variable'], passed_info['amount']);
                 break;
             case "Set":
-                set(passed_info['variable'], passed_info['amount']);
+                if (current_model == 'oscillator') {
+                    quantum(passed_info['which']);
+                } else {
+                    set(passed_info['variable'], passed_info['amount']);
+                }
                 break;
             case "Plot":
                 plot(passed_info['variables']);
                 break;
             case "Clear":
                 clear(passed_info['which']);
+                break;
+            default:
                 break;
         }
 
@@ -125,8 +128,10 @@ function create(model) {
             pendulum_create();
             break;
         case 'block on a ramp':
+            block_create();
             break;
         case 'quantum harmonic oscillator':
+            quantum_create();
             break;
         case 'mobius strip':
             break;
