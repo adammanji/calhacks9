@@ -37,12 +37,11 @@ function clear(which) {
         $("#simulation").html("");
         $("#chart-container1").html("");
         $("#chart-container1").html("<canvas id='chart1'></canvas>");
-        $("#container").fadeIn(250);
         current_model = "";
-        line_length = 250;
-        mass = 1;
-        angle = 1;
-        angular_velocity = 0;
+        p_line_length = 5*50;
+        p_mass = 1;
+        p_angle = 1;
+        p_angular_velocity = 0;
         model_active = false;
         if (render != undefined) {
             World.clear(world);
@@ -53,6 +52,7 @@ function clear(which) {
         }
         coeffs = [1];
         q_data = undefined;
+        $("#container").fadeIn(250);
     })
 }
 
@@ -94,7 +94,7 @@ var model_active = false;
 var pendulum;
 var p_rod;
 
-var p_line_length = 250; // we'll start with this
+var p_line_length = 5*50; // we'll start with this
 var p_mass = 1;
 var p_angle = 1;
 var p_angular_velocity;
@@ -183,7 +183,7 @@ function pendulum_set(type, variable, amount) {
             console.log(pendulum_vel_x(p_angular_velocity), pendulum_vel_y(angular_velocity));
             break;
         case 'length':
-            p_line_length = adjust(p_line_length, type, amount);
+            p_line_length = adjust(p_line_length, type, amount*50);
             Matter.World.remove(world, p_rod);
             Matter.Body.setPosition(pendulum, {x: pendulum_x(p_angle), y: pendulum_y(p_angle)});
             Matter.Body.setVelocity(pendulum, {x: 0, y: 0});
