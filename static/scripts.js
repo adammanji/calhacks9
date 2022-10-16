@@ -10,18 +10,38 @@ sr.lang = 'en-CA';
 sr.interimResults = false;
 sr.maxAlternatives = 1;
 
+speech_recognition_started = false;
+
+function keyDown(k) {
+    if (k == 32) {
+        if (!speech_recognition_started) {
+            sr.start();
+            speech_recognition_started = true;
+        }
+        // $('#textHere').html("Say something...");
+    }
+}
+function keyUp(k) {
+    if (k == 32) {
+        sr.stop();
+        speech_recognition_started = false;
+        // $('#textHere').html("Say something...");
+    }
+}
 
 $(document).ready(function() {
-    $('#speechButton').click(function() {
-        sr.start();
-        $('#textHere').html("Say something...");
+    $(document).keydown(function(e) {
+        keyDown(e.keyCode);
+    });
+    $(document).keyup(function(e) {
+        keyUp(e.keyCode);
     });
 });
 
-sr.onspeechend = function() {
-    sr.stop();
-    $('#textHere').html("Results are on their way...");
-}
+// sr.onspeechend = function() {
+//     sr.stop();
+    // $('#textHere').html("Results are on their way...");
+// }
 
 sr.onresult = function(event) {
     speech = event.results[0][0].transcript;
