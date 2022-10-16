@@ -174,7 +174,7 @@ def nlp() :
 
 
 
-variables = ['mass', 'length', 'height', 'gravity', 'angle', 'angular velocity']
+variables = ['mass', 'length', 'height', 'gravity', 'angle angle', 'angular velocity']
 plot_variables = variables.copy() + ['potential', 'kinetic', 'over time']
 models = ['block on a ramp', 'pendulum', 'quantum harmonic oscillator', 'mobius strip']
 oscillator_key_phrases = ['give me the ground state', 'add some second stationary state', 'add a bit of first excited state', 'give me a random linear combination of stationary states', 'coherent state']
@@ -209,6 +209,8 @@ def get_variable(phrase) :
         if sim > max_sim :
             max_sim = sim
             output = v
+    if output == 'angle angle' :
+        output = 'angle'
     return output
 
 
@@ -246,6 +248,11 @@ def get_plot_variables(phrase, oscillator=False) :
         output1 = 'time'
     elif output2 == 'over time' :
         output2 = 'time'
+
+    if output1 == 'angle angle' :
+        output1 = 'angle'
+    elif output2 == 'angle angle' :
+        output2 = 'angle'
 
     if output1 == 'time' :
         output1, output2 = output2, 'time'

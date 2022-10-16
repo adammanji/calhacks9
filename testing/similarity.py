@@ -7,7 +7,10 @@ def similarity(a, b) :
 
 def main() :
 
-    pass
+    phrase = 'Plot kinetic energy over angle'
+
+    print(similarity(phrase, 'angle angle'))
+    print(similarity(phrase, 'potential'))
 
 
 main()
