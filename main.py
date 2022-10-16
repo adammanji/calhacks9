@@ -1,7 +1,10 @@
 import functools
 import json
+from lib2to3.pgen2.literals import simple_escapes
 import os
+import re
 
+from difflib import SequenceMatcher
 import json
 import random
 import string
@@ -27,6 +30,11 @@ from datetime import timedelta
 
 import atexit
 import time
+
+import cohere
+
+co = cohere.Client('eDxAAFeRgmyqM2FkPzHYxa7aPnBZYD8MLIqda803')
+command_type_model = "2111452f-f3a2-4b6b-b680-db2366a7714f-ft"
 
 app = Flask(__name__)
 
@@ -77,10 +85,128 @@ Gzip(app)
 Session(app)
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index() :
 
     return render_template("index.html")
+
+
+@app.route('/nlp', methods=['POST'])
+def nlp() :
+
+    phrase = request.form['phrase']
+
+    command = get_most_confident(co.classify(model=command_type_model, inputs=[phrase])).strip()
+    info = {}
+
+    if command == 'Create' :
+
+        info['model'] = most_similar_model(phrase)
+
+    elif command in ['Increase', 'Decrease', 'Set'] :
+
+        info['variable'] = get_variable(phrase)
+        info['amount'] = get_amount(phrase)
+
+        if command == 'Decrease' and info['amount'] > 0 :
+            info['amount'] = -1 * info['amount']
+    
+    elif command == 'Plot' :
+
+        info['variables'] = get_plot_variables(phrase)
+
+    return {'command': command, 'info': info}
+
+
+
+variables = ['mass', 'length', 'height', 'gravity', 'angle', 'angular velocity']
+plot_variables = variables.copy() + ['potential', 'kinetic', 'over time']
+models = ['block on a ramp', 'pendulum', 'quantum harmonic oscillator', 'mobius strip']
+
+
+
+def similarity(a, b) :
+
+    return SequenceMatcher(None, a, b).ratio()
+
+
+def get_variable(phrase) :
+
+    max_sim = 0.0
+    output = ""
+    for v in variables :
+        sim = similarity(v, phrase)
+        if sim > max_sim :
+            max_sim = sim
+            output = v
+    return output
+
+
+def get_plot_variables(phrase) :
+
+    max_sim = 0.0
+    output1 = ""
+    for v in plot_variables :
+        sim = similarity(v, phrase)
+        if sim > max_sim :
+            max_sim = sim
+            output1 = v
+
+    plot_variables.remove(output1)
+
+    max_sim = 0.0
+    output2 = ""
+    for v in plot_variables :
+        sim = similarity(v, phrase)
+        if sim > max_sim :
+            max_sim = sim
+            output2 = v
+    if max_sim < 0.1 :
+        output2 = 'time'
+
+    plot_variables.append(output1)
+
+    if output1 == 'over time' :
+        output1 = 'time'
+    elif output2 == 'over time' :
+        output2 = 'time'
+
+    if output1 == 'time' :
+        output1, output2 = output2, 'time'
+    
+    return [output1, output2]
+
+
+def most_similar_model(phrase) :
+
+    max_sim = 0.0
+    output = ""
+    for model in models :
+        sim = similarity(model, phrase)
+        if sim > max_sim :
+            max_sim = sim
+            output = model
+    return output
+
+
+def get_amount(phrase) :
+
+    numbers = re.findall(r"[-+]?(?:\d*\.\d+|\d+)", phrase)
+    return float(numbers[0])
+
+
+def get_most_confident(result) :
+
+    max_conf = 0.0
+    output = ""
+
+    for e in result.classifications[0].confidence :
+        if e.confidence > max_conf :
+            max_conf = e.confidence
+            output = e.label
+
+    return output
+
 
 
 if __name__ == '__main__' :

@@ -6,7 +6,7 @@ var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEv
 var sr = new SpeechRecognition();
 
 sr.continuous = false;
-sr.lang = 'en-US';
+sr.lang = 'en-CA';
 sr.interimResults = false;
 sr.maxAlternatives = 1;
 
@@ -24,5 +24,8 @@ sr.onspeechend = function() {
 }
 
 sr.onresult = function(event) {
-    $('#textHere').html(event.results[0][0].transcript);
+    speech = event.results[0][0].transcript;
+    // $('#textHere').html(speech);
+    process_nlp(speech);
+
 }
