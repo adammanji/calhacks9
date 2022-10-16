@@ -2,43 +2,47 @@
 // plot_variables = variables.copy() + ['potential', 'kinetic', 'over time'];
 current_model = "";
 
-function process_nlp(phrase) {
+function process_nlp(phrases) {
 
-    currentModel = ""
-    // comment this out when we have an actual way to track this
+    for (var i = 0; i < phrases.length; i++) {
 
-    $.post('/nlp', {'phrase': phrase, 'model': currentModel}, function(data, status, jqXHR) {
+        var phrase = phrases[i];
 
-    /*  POSSIBLE ERRORS
+        currentModel = ""
+        // comment this out when we have an actual way to track this
 
-        no number - cannot find a number
-        command not valid on oscillator - increase or decrease on oscillator
-        no match for oscillator set - none of the oscillator set phrases 
+        $.post('/nlp', {'phrase': phrase, 'model': currentModel}, function(data, status, jqXHR) {
 
-    */
+        /*  POSSIBLE ERRORS
 
-        if (data['error']) {
+            no number - cannot find a number
+            command not valid on oscillator - increase or decrease on oscillator
+            no match for oscillator set - none of the oscillator set phrases 
 
-            e = data['error'];
-            
-            if (e == 'no number') {
-                alert("no number given!");
+        */
+
+            if (data['error']) {
+
+                e = data['error'];
+                
+                if (e == 'no number') {
+                    alert("no number given!");
+                }
+
+                else if (e == 'command not valid on oscillator') {
+                    alert(e);
+                }
+
+                else if (e == 'no match for oscillator set') {
+                    alert(e);
+                }
+
+                return;
+
             }
 
-            else if (e == 'command not valid on oscillator') {
-                alert(e);
-            }
-
-            else if (e == 'no match for oscillator set') {
-                alert(e);
-            }
-
-            return;
-
-        }
-
-        passed_info = data['info'];
-        command = data['command'];
+            passed_info = data['info'];
+            command = data['command'];
 
         switch (command) {
             case "Create":
@@ -67,48 +71,50 @@ function process_nlp(phrase) {
         
         passed_info has certain variables based on command
 
-            Create - ['model': 'pendulum']
-            Increase, Decrease, Set - ['variable': 'height', 'amount': 0.0]
-            Plot - ['variables': ['velocity', 'time']]
-            Clear - ['which': 'plot'] -- options: ['plot', 'all']
+                Create - ['model': 'pendulum']
+                Increase, Decrease, Set - ['variable': 'height', 'amount': 0.0]
+                Plot - ['variables': ['velocity', 'time']]
+                Clear - ['which': 'plot'] -- options: ['plot', 'all']
 
-        switch (command) {
-            case "Create":
-                create(passed_info['model']);
-                break;
-            case "Increase":
-                increase(passed_info['variable'], passed_info['amount']);
-                break;
-            case "Decrease":
-                decrease(passed_info['variable'], passed_info['amount']);
-                break;
-            case "Set":
-                set(passed_info['variable'], passed_info['amount']);
-                break;
-            case "Plot":
-                plot(passed_info['variables']);
-                break;
-            case "Clear":
-                clear();
-                break;
-        }
+            switch (command) {
+                case "Create":
+                    create(passed_info['model']);
+                    break;
+                case "Increase":
+                    increase(passed_info['variable'], passed_info['amount']);
+                    break;
+                case "Decrease":
+                    decrease(passed_info['variable'], passed_info['amount']);
+                    break;
+                case "Set":
+                    set(passed_info['variable'], passed_info['amount']);
+                    break;
+                case "Plot":
+                    plot(passed_info['variables']);
+                    break;
+                case "Clear":
+                    clear();
+                    break;
+            }
 
-        console.log(passed_info, command);
+            console.log(passed_info, command);
 
-            IF MODEL IS OSCILLATOR, Increase and Decrease return errors
-                Set returns ['which': 'ground state'] (one of the key phrases)
+                IF MODEL IS OSCILLATOR, Increase and Decrease return errors
+                    Set returns ['which': 'ground state'] (one of the key phrases)
 
-            variables = ['mass', 'length', 'height', 'gravity', 'angle', 'angular velocity']
-            plot_variables = variables.copy() + ['potential', 'kinetic', 'time']
-            models = ['block on a ramp', 'pendulum', 'quantum harmonic oscillator', 'mobius strip']
-            oscillator_key_phrases = ['ground state', 'add some second stationary state', 'add a bit of first excited state',
-                'give me a random linear combination of stationary states', 'coherent state']
+                variables = ['mass', 'length', 'height', 'gravity', 'angle', 'angular velocity']
+                plot_variables = variables.copy() + ['potential', 'kinetic', 'time']
+                models = ['block on a ramp', 'pendulum', 'quantum harmonic oscillator', 'mobius strip']
+                oscillator_key_phrases = ['ground state', 'add some second stationary state', 'add a bit of first excited state',
+                    'give me a random linear combination of stationary states', 'coherent state']
 
-        get back commands to interpret, run those commands w troy's code 
-        
-        */
+            get back commands to interpret, run those commands w troy's code 
+            
+            */
 
-    });
+        });
+
+    }
 
 }
 

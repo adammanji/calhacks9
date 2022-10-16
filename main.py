@@ -163,7 +163,7 @@ def nlp() :
 
     elif command == 'Clear' :
 
-        if 'plot' in phrase.split(" ") :
+        if 'plot' in phrase :
 
             info['which'] = 'plot'
         

@@ -47,6 +47,6 @@ $(document).ready(function() {
 sr.onresult = function(event) {
     speech = event.results[0][0].transcript;
     // $('#textHere').html(speech);
-    process_nlp(speech);
+    process_nlp(speech.split("and"));
 
 }
