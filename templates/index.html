@@ -11,10 +11,8 @@ Jarvis
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/jarvis-css.css">
-    <script src="/static/fading-transition.js"></script>
+    
 </head>
-
-    <script src="/static/nlp.js"></script>
 
 {% endblock %}
 
@@ -22,10 +20,33 @@ Jarvis
 
 {% block body %}
 <body class="background">
+    <div class="container">
+        <div id="simulation"></div>
+        <div id="chart-container1">
+            <canvas id="chart1"></canvas>
+        </div>
+        <!-- <div id="chart-container2">
+            <canvas id="chart2"></canvas>
+        </div> -->
+    </div>
     <div class="text">
         <p style="font-size: 6em">Hello</p>
         <p style="font-size: 4em;"> My name is JARVIS.</p>
         <p style="font-size: 5em">How may I assist you?</p>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script src="/static/matter.js"></script>
+    <script src="/static/jquery-3.6.1.min.js"></script>
+    <script src="/static/nlp.js"></script>
+    <script src="/static/scripts.js"></script>
+    <script type="module">
+        import * as THREE from "https://cdn.skypack.dev/three@0.136.0";
+        import {OrbitControls} from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls";
+        import {ParametricGeometry} from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/geometries/ParametricGeometry";
+        import {ParametricGeometries} from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/geometries/ParametricGeometries";
+    </script>
+    <script src="/static/simulation.js"></script>
+    <!-- <script src="/static/fading-transition.js"></script> -->
 </body>
 {% endblock %}

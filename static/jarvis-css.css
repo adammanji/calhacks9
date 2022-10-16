@@ -45,3 +45,31 @@
 }
 
 
+
+#container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#chart-container1 {
+  position: absolute;
+  top: 50px;
+  left: 55%;
+  width: 700px;
+  background-color: white;
+  opacity: 0;
+  /* -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); */
+}
+
+#chart-container2 {
+  position: absolute;
+  top: 750px;
+  left: 55%;
+  width: 700px;
+  background-color: white;
+  opacity: 0;
+  /* -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); */
+}
