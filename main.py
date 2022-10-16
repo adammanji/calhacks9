@@ -183,6 +183,9 @@ oscillator_plot_variables = plot_variables.copy() + ['position', 'momentum', 'he
 
 def similarity(a, b) :
 
+    if a in b :
+        return 1.0
+
     return SequenceMatcher(None, a, b).ratio()
 
 
