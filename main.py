@@ -106,7 +106,10 @@ def nlp() :
     elif command in ['Increase', 'Decrease', 'Set'] :
 
         info['variable'] = get_variable(phrase)
-        info['amount'] = get_amount(phrase)
+        try :
+            info['amount'] = get_amount(phrase)
+        except :
+            return {'error': 'no number'}
 
         if command == 'Decrease' and info['amount'] > 0 :
             info['amount'] = -1 * info['amount']

@@ -2,8 +2,21 @@ function process_nlp(phrase) {
 
     $.post('/nlp', {'phrase': phrase}, function(data, status, jqXHR) {
 
-        passed_info = data['info']
-        command = data['command']
+        if (data['error']) {
+
+            e = data['error'];
+            
+            if (e == 'no number') {
+
+                alert("no number given!");
+                return;
+
+            }
+
+        }
+
+        passed_info = data['info'];
+        command = data['command'];
 
         // passed_info has certain variables based on command
 
