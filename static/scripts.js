@@ -50,3 +50,40 @@ sr.onresult = function(event) {
     process_nlp(speech.split("and"));
 
 }
+
+
+
+// text to speech, steve responds
+
+const responses = {
+    'Create': ["How does this look?"],
+    'Modify': ["This looks about right..."],
+    'Plot': ["Sorry about the crooked lines, my writing's a little sloppy."],
+    'Clear': ["Got it... what's next?", "Getting rid of it as we speak.", "Finally!"]
+}
+
+
+// troy call THIS
+
+function respond(commandType) {
+
+    if (['Increase', 'Decrease', 'Set'].includes(commandType)) {
+
+        commandType = 'Modify';
+
+    }
+
+    var response = responses[Math.floor(Math.random()*responses.length)];
+    tts(response);
+
+}
+
+
+// text to speech
+function tts(speech) {
+
+    var msg = new SpeechSynthesisUtterance();
+    msg.text = speech;
+    window.speechSynthesis.speak(msg);
+
+}
