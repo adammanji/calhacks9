@@ -1,4 +1,4 @@
-var quotes = $(".quotes")[0];
+var quotes = $(".quotes");
 
 (function($){
     $.fn.extend({
@@ -11,11 +11,12 @@ var quotes = $(".quotes")[0];
             };
              
             var options = $.extend(defaults, options);
-         
+            var counter = 1; 
             return this.each(function() {
                   var o =options;
                   var obj = $(this);                
                   var items = $(obj.children(), obj);
+                  var counter = 1; 
                   items.each(function() {$(this).hide();})
                   if(!o.child){
                       var next = $(obj).children(':first');
@@ -25,11 +26,12 @@ var quotes = $(".quotes")[0];
                   $(next).fadeIn(o.fadeSpeed, function() {
                     $(next).delay(o.pauseSpeed).fadeOut(o.fadeSpeed, function() {
                         var next = $(this).next();
-                        if (next.length == 0){
+                        if (items.next == null){
                             /*next = $(obj).children(':first');*/
-                            return;
+                            return;     
                         }
                         $(obj).rotaterator({child : next, fadeSpeed : o.fadeSpeed, pauseSpeed : o.pauseSpeed});
+                        counter += 1; 
                     })
                 });
         });

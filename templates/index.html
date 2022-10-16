@@ -2,7 +2,7 @@
 
 {% block title %}
 
-Jarvis
+Steve
 
 {% endblock %}
 
@@ -20,7 +20,12 @@ Jarvis
 
 {% block body %}
 <body class="background">
-    <div id="container">
+    <img src="/static/STEVEEEE.png" alt=STEVE style="height: 100px; 
+    width: auto; 
+    position: absolute;
+    top: 10px;
+    left: 20px;"> 
+    <div class="container">
         <div id="simulation"></div>
         <div id="chart-container1">
             <canvas id="chart1"></canvas>
@@ -31,9 +36,16 @@ Jarvis
     </div>
     <div class="text">
         <p style="font-size: 6em">Hello</p>
-        <p style="font-size: 4em;"> My name is JARVIS.</p>
-        <p style="font-size: 5em">How may I assist you?</p>
+        <p style="font-size: 4em;"> My name is STEVE.</p>
     </div>
+    <div class="inputpage">
+        <div class="inputtext">
+            <p style="font-size: 4em;">What can I show you?</p>
+        </div> 
+        <a href="javascript:setImageVisible('/static/Jarvis_fast_gif.gif', false)"><img src="/static/Jarvis_fast_gif.gif" alt=TALKING style = "height:300px; width: auto; 
+            position: absolute; top: 50px; left: 80px"></a>
+    </div>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
     <script src="/static/matter.js"></script>
@@ -47,6 +59,6 @@ Jarvis
         import {ParametricGeometries} from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/geometries/ParametricGeometries";
     </script>
     <script src="/static/simulation.js"></script>
-    <!-- <script src="/static/fading-transition.js"></script> -->
+    <script src="/static/fading-transition.js"></script>
 </body>
 {% endblock %}
